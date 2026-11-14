@@ -1,0 +1,12 @@
+# Build output (published as GitHub Release assets instead)
+dist/
+*.res
+*.o
+*.exe
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

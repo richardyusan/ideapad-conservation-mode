@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    # Oldest supported runner, so the Linux binary runs on older distros too.
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc libgtk-3-dev gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+
+      - name: Build
+        run: ./build.sh
+
+      - name: Package
+        run: |
+          mkdir -p pkg/ConservationMode-linux-x86_64
+          cp dist/ConservationMode install.sh pkg/ConservationMode-linux-x86_64/
+          mkdir -p pkg/ConservationMode-linux-x86_64/assets
+          cp assets/icon-256.png pkg/ConservationMode-linux-x86_64/assets/
+          tar -C pkg -czf ConservationMode-linux-x86_64.tar.gz ConservationMode-linux-x86_64
+          cp dist/ConservationMode.exe ConservationMode-windows-x64.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ConservationMode
+          path: |
+            ConservationMode-linux-x86_64.tar.gz
+            ConservationMode-windows-x64.exe
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            ConservationMode-linux-x86_64.tar.gz
+            ConservationMode-windows-x64.exe
