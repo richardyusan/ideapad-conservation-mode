@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <action id="io.github.conservationmode.set">
+    <description>Change battery Conservation Mode</description>
+    <message>Authentication is required to change battery Conservation Mode</message>
+    <icon_name>battery-good-charging-symbolic</icon_name>
+    <defaults>
+      <!-- The logged-in user at the machine needs no password;
+           remote or inactive sessions must authenticate as admin. -->
+      <allow_any>auth_admin</allow_any>
+      <allow_inactive>auth_admin</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/libexec/conservation-mode-helper</annotate>
+  </action>
+</policyconfig>

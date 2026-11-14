@@ -31,6 +31,20 @@ Or run `./ConservationMode` directly without installing. Changing the setting as
 
 On Linux the app also keeps your choice after a restart. Turning the mode ON enables a small systemd service (`battery-conservation.service`) that re-applies it at boot, and turning it OFF disables that service.
 
+### Ubuntu / GNOME Quick Settings toggle
+A GNOME Shell extension (GNOME 45–50) adds a **Conservation** toggle to the Quick Settings menu (top-right, next to Wi-Fi, Bluetooth and Power Mode). It shows the current state each time the menu opens. When the mode is on, a battery icon appears in the top bar.
+
+```sh
+cd gnome-extension
+sudo ./install-helper.sh   # once: root helper + polkit policy, so the toggle needs no password
+./install.sh               # installs the extension for your user
+```
+On Wayland, log out and back in, then run:
+```sh
+gnome-extensions enable conservation-mode@conservationmode.github.io
+```
+The toggle runs `/usr/local/libexec/conservation-mode-helper on|off` through `pkexec`. The polkit policy lets the active local user run that one helper without a password. Like the app, the helper also turns the boot service on or off. To remove everything: `./install.sh uninstall` and `sudo ./install-helper.sh uninstall`.
+
 ### Command line
 ```sh
 ConservationMode status | on | off | --version          # Linux
@@ -71,6 +85,7 @@ src/app.rc, src/app.manifest    Windows icon, version info and manifest
 assets/                         App icon
 scripts/ConservationMode.ps1    PowerShell command-line version
 install.sh                      Linux per-user installer
+gnome-extension/                GNOME Quick Settings toggle, root helper and polkit policy
 ```
 
 ## Disclaimer

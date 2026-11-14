@@ -1,0 +1,52 @@
+#!/bin/sh
+# Root helper for the Conservation Mode GNOME extension.
+# Installed to /usr/local/libexec/conservation-mode-helper and started with
+# pkexec. Accepts only "on" or "off".
+#
+# Also enables/disables battery-conservation.service (the same boot service
+# the GTK app uses) so the choice survives a reboot.
+set -eu
+PATH=/usr/sbin:/usr/bin:/sbin:/bin
+export PATH
+
+case "${1:-}" in
+    on)  v=1 ;;
+    off) v=0 ;;
+    *)   echo "usage: $0 on|off" >&2; exit 2 ;;
+esac
+
+found=0
+for f in /sys/bus/platform/drivers/ideapad_acpi/*/conservation_mode; do
+    [ -e "$f" ] || continue
+    echo "$v" > "$f"
+    found=1
+done
+if [ "$found" -ne 1 ]; then
+    echo "conservation_mode not found (is the ideapad_laptop module loaded?)" >&2
+    exit 1
+fi
+
+SERVICE=/etc/systemd/system/battery-conservation.service
+[ -d /run/systemd/system ] || exit 0
+
+if [ "$v" = 1 ]; then
+    if [ ! -f "$SERVICE" ]; then
+        cat > "$SERVICE" <<'EOF'
+[Unit]
+Description=Enable Lenovo IdeaPad battery conservation mode
+After=multi-user.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'for f in /sys/bus/platform/drivers/ideapad_acpi/*/conservation_mode; do echo 1 > "$f"; done'
+
+[Install]
+WantedBy=multi-user.target
+EOF
+        systemctl daemon-reload || true
+    fi
+    systemctl enable --quiet battery-conservation.service || echo "Warning: could not enable boot service" >&2
+elif [ -f "$SERVICE" ]; then
+    systemctl disable --quiet battery-conservation.service || echo "Warning: could not disable boot service" >&2
+fi
+exit 0
