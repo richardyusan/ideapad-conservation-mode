@@ -22,7 +22,7 @@
 #include <unistd.h>
 
 #define APP_ID      "io.github.conservationmode"
-#define APP_VERSION "1.0.0"
+#define APP_VERSION "1.1.0"
 #define SYSFS_GLOB  "/sys/bus/platform/drivers/ideapad_acpi/*/conservation_mode"
 #define SERVICE     "/etc/systemd/system/battery-conservation.service"
 

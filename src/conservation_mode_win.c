@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <wchar.h>
 
-#define APP_VERSION L"1.0.0"
+#define APP_VERSION L"1.1.0"
 
 #define IOCTL_ENERGY_BATTERY_CHARGE_MODE 0x831020F8
 #define CMD_READ  0xFF

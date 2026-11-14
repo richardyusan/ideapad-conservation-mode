@@ -15,6 +15,7 @@ Get the latest build from the [Releases](../../releases) page:
 |---|---|---|
 | Windows 10/11 (x64) | `ConservationMode-windows-x64.exe` | None. A single file with no installer and no admin rights. Lenovo Vantage or Lenovo Energy Management drivers must be installed (they are on stock Lenovo Windows installs). |
 | Linux (x86_64) | `ConservationMode-linux-x86_64.tar.gz` | Only standard desktop libraries: glibc and GTK 3 (preinstalled on Ubuntu, Debian, Fedora, Mint, etc.) and the in-kernel `ideapad_laptop` driver. |
+| Ubuntu / GNOME 45–50 | `ConservationMode-gnome-extension.tar.gz` | Quick Settings toggle only (also included in the Linux download). Needs `sudo` once to install the helper. |
 
 ## Usage
 
@@ -34,6 +35,7 @@ On Linux the app also keeps your choice after a restart. Turning the mode ON ena
 ### Ubuntu / GNOME Quick Settings toggle
 A GNOME Shell extension (GNOME 45–50) adds a **Conservation** toggle to the Quick Settings menu (top-right, next to Wi-Fi, Bluetooth and Power Mode). It shows the current state each time the menu opens. When the mode is on, a battery icon appears in the top bar.
 
+From the extracted Linux download, the `ConservationMode-gnome-extension.tar.gz` download, or a clone of this repository:
 ```sh
 cd gnome-extension
 sudo ./install-helper.sh   # once: root helper + polkit policy, so the toggle needs no password

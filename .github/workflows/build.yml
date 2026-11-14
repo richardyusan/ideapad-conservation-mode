@@ -31,7 +31,9 @@ jobs:
           cp dist/ConservationMode install.sh pkg/ConservationMode-linux-x86_64/
           mkdir -p pkg/ConservationMode-linux-x86_64/assets
           cp assets/icon-256.png pkg/ConservationMode-linux-x86_64/assets/
+          cp -r gnome-extension pkg/ConservationMode-linux-x86_64/
           tar -C pkg -czf ConservationMode-linux-x86_64.tar.gz ConservationMode-linux-x86_64
+          tar -czf ConservationMode-gnome-extension.tar.gz gnome-extension
           cp dist/ConservationMode.exe ConservationMode-windows-x64.exe
 
       - uses: actions/upload-artifact@v4
@@ -39,6 +41,7 @@ jobs:
           name: ConservationMode
           path: |
             ConservationMode-linux-x86_64.tar.gz
+            ConservationMode-gnome-extension.tar.gz
             ConservationMode-windows-x64.exe
 
       - name: Publish release
@@ -47,4 +50,5 @@ jobs:
         with:
           files: |
             ConservationMode-linux-x86_64.tar.gz
+            ConservationMode-gnome-extension.tar.gz
             ConservationMode-windows-x64.exe
