@@ -25,6 +25,9 @@ jobs:
       - name: Build
         run: ./build.sh
 
+      - name: Build .deb
+        run: ./packaging/build-deb.sh
+
       - name: Package
         run: |
           mkdir -p pkg/ConservationMode-linux-x86_64
@@ -43,6 +46,7 @@ jobs:
             ConservationMode-linux-x86_64.tar.gz
             ConservationMode-gnome-extension.tar.gz
             ConservationMode-windows-x64.exe
+            dist/*.deb
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/v')
@@ -52,3 +56,4 @@ jobs:
             ConservationMode-linux-x86_64.tar.gz
             ConservationMode-gnome-extension.tar.gz
             ConservationMode-windows-x64.exe
+            dist/*.deb

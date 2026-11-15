@@ -3,5 +3,5 @@
   "name": "Conservation Mode",
   "description": "Quick Settings toggle for Lenovo IdeaPad battery Conservation Mode (charge limit).",
   "shell-version": ["45", "46", "47", "48", "49", "50"],
-  "version": 1
+  "version": 2
 }

@@ -14,6 +14,7 @@ Get the latest build from the [Releases](../../releases) page:
 | OS | File | Requirements |
 |---|---|---|
 | Windows 10/11 (x64) | `ConservationMode-windows-x64.exe` | None. A single file with no installer and no admin rights. Lenovo Vantage or Lenovo Energy Management drivers must be installed (they are on stock Lenovo Windows installs). |
+| Ubuntu / Debian (amd64) | `conservation-mode_<version>_amd64.deb` | Installs the app, the GNOME Quick Settings toggle and its password-free helper in one step. Ubuntu 22.04 or newer, Debian 12 or newer; the toggle itself needs GNOME 45 or newer (Ubuntu 23.10+, Debian 13+). |
 | Linux (x86_64) | `ConservationMode-linux-x86_64.tar.gz` | Only standard desktop libraries: glibc and GTK 3 (preinstalled on Ubuntu, Debian, Fedora, Mint, etc.) and the in-kernel `ideapad_laptop` driver. |
 | Ubuntu / GNOME 45–50 | `ConservationMode-gnome-extension.tar.gz` | Quick Settings toggle only (also included in the Linux download). Needs `sudo` once to install the helper. |
 
@@ -22,7 +23,13 @@ Get the latest build from the [Releases](../../releases) page:
 ### Windows
 Double-click `ConservationMode-windows-x64.exe`, then flip the switch.
 
-### Linux
+### Ubuntu / Debian (.deb)
+```sh
+sudo apt install ./conservation-mode_*_amd64.deb
+```
+This installs the app (in your app menu as "Conservation Mode"), the GNOME Quick Settings toggle and its helper. To turn on the toggle, log out and back in, then run `gnome-extensions enable conservation-mode@conservationmode.github.io`. Remove it with `sudo apt remove conservation-mode`.
+
+### Linux (other distributions)
 ```sh
 tar xzf ConservationMode-linux-x86_64.tar.gz
 cd ConservationMode-linux-x86_64
@@ -74,6 +81,7 @@ On Ubuntu or Debian:
 ```sh
 sudo apt install gcc libgtk-3-dev gcc-mingw-w64-x86-64
 ./build.sh
+./packaging/build-deb.sh   # optional: dist/conservation-mode_<version>_amd64.deb
 ```
 This builds `dist/ConservationMode` (Linux) and `dist/ConservationMode.exe` (Windows). GitHub Actions builds both on every push, and publishes a release when you push a `v*` tag:
 ```sh
@@ -87,6 +95,7 @@ src/app.rc, src/app.manifest    Windows icon, version info and manifest
 assets/                         App icon
 scripts/ConservationMode.ps1    PowerShell command-line version
 install.sh                      Linux per-user installer
+packaging/build-deb.sh          Builds the .deb package from dist/ConservationMode
 gnome-extension/                GNOME Quick Settings toggle, root helper and polkit policy
 ```
 

@@ -14,7 +14,11 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {QuickToggle, SystemIndicator} from 'resource:///org/gnome/shell/ui/quickSettings.js';
 
 const DRIVER_DIR = '/sys/bus/platform/drivers/ideapad_acpi';
-const HELPER = '/usr/local/libexec/conservation-mode-helper';
+// .deb package installs to /usr/libexec; install-helper.sh to /usr/local/libexec.
+const HELPERS = [
+    '/usr/libexec/conservation-mode-helper',
+    '/usr/local/libexec/conservation-mode-helper',
+];
 const ICON = 'battery-good-charging-symbolic';
 
 function findSysfsFile() {
@@ -75,9 +79,15 @@ class ConservationToggle extends QuickToggle {
         this._busy = true;
         this.reactive = false;
 
+        const helper = HELPERS.find(p => GLib.file_test(p, GLib.FileTest.IS_EXECUTABLE));
+        if (!helper) {
+            this._finish('Helper not found. Install the conservation-mode .deb, or run: sudo gnome-extension/install-helper.sh');
+            return;
+        }
+
         let proc;
         try {
-            proc = Gio.Subprocess.new(['pkexec', HELPER, want ? 'on' : 'off'],
+            proc = Gio.Subprocess.new(['pkexec', helper, want ? 'on' : 'off'],
                 Gio.SubprocessFlags.STDERR_PIPE);
         } catch (e) {
             this._finish(`Could not start pkexec: ${e.message}`);
@@ -89,7 +99,7 @@ class ConservationToggle extends QuickToggle {
                 const [, , stderr] = p.communicate_utf8_finish(res);
                 const code = p.get_exit_status();
                 if (code === 127 || code === 126)
-                    err = 'Authorization failed or was cancelled. Is the helper installed? Run: sudo gnome-extension/install-helper.sh';
+                    err = 'Authorization failed or was cancelled.';
                 else if (code !== 0)
                     err = (stderr || '').trim() || `Helper exited with status ${code}`;
             } catch (e) {
